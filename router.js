@@ -12,6 +12,10 @@ export default class Router extends HTMLElement {
             "project\/(\\d+)": {
                 view: `<project-view projectid="$$"></project-view>`,
                 name: "Enskild projekt",
+            },
+            "new-project": {
+                view: `<new-project></new-project>`,
+                name: `Nytt projekt`,
             }
         };
     }
