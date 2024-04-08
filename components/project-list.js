@@ -1,3 +1,5 @@
+import projectModel from "../models/project.js";
+
 export default class ProjectList extends HTMLElement {
     constructor() {
         super();
@@ -9,12 +11,7 @@ export default class ProjectList extends HTMLElement {
     // connect component
     async connectedCallback() {
         try {
-            const response = await fetch("http://localhost:8866/projects");
-
-
-            const result = await response.json();
-
-            this.projects = result.data;
+            this.projects = await projectModel.fetchProjects();
 
             this.render();
         } catch (error) {
@@ -23,11 +20,46 @@ export default class ProjectList extends HTMLElement {
     }
 
     render() {
-        const list = this.projects.map((p) => {
-            return `<p>${p.name} - ${p.responsible}</p>`;
-        }).join("\n");
+        const shadow = this.attachShadow({ mode: "open" });
+        const sheet = new CSSStyleSheet();
 
-        this.innerHTML = list;
+        sheet.replaceSync(`.project {
+            border: 1px solid #ccc;
+            padding: 1rem;
+            margin-bottom: 1.4rem;
+        }
+        .button {
+            color: #0e6620;
+            background-color: #2ecc40;
+            border: 1px solid #0e6620;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            border-radius: 4px;
+        }`);
+
+        shadow.adoptedStyleSheets = [sheet];
+
+        for (let i = 0; i < this.projects.length; i++) {
+            let p = this.projects[i];
+            let element = document.createElement("div");
+
+            element.classList.add("project");
+
+            let name = document.createElement("p");
+
+            name.textContent = `${p.name} - ${p.responsible}`;
+
+            let button = document.createElement("a");
+
+            button.textContent = "Gå till projektet";
+            button.href = `#project/${i}`;
+            button.classList.add("button");
+
+            element.appendChild(name);
+            element.appendChild(button);
+
+            shadow.appendChild(element);
+        }
     }
 
     errorView() {
