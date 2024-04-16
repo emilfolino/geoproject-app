@@ -1,4 +1,4 @@
-import projectModel from "../models/project.js";
+import auth from "../models/auth.js";
 
 export default class NewProject extends HTMLElement {
     constructor() {
@@ -10,6 +10,15 @@ export default class NewProject extends HTMLElement {
 
     // connect component
     connectedCallback() {
+        if (!auth.token) {
+            auth.flash = "You must be logged in!";
+            location.hash = "";
+
+            return;
+        }
+
+        this.project.responsible = auth.email;
+
         this.innerHTML = "<h1>Nytt projekt</h1>";
 
         let form = document.createElement("form");
@@ -21,19 +30,18 @@ export default class NewProject extends HTMLElement {
                 const response = await fetch("http://localhost:8866/projects", {
                     body: JSON.stringify(this.project),
                     headers: {
-                    'content-type': 'application/json'
+                        'content-type': 'application/json',
+                        'x-access-token': auth.token,
                     },
                     method: 'POST'
                 });
 
-                console.log(response);
+                const result = await response.json();
 
                 if (response.status === 201) {
-                    const result = await response.json();
-
-                    console.log(result);
-
                     window.location.hash = "";
+                } else {
+                    console.log(result);
                 }
             }
         });
@@ -72,22 +80,22 @@ export default class NewProject extends HTMLElement {
 
         form.append(description);
 
-        let respLabel = document.createElement("label");
+        // let respLabel = document.createElement("label");
 
-        respLabel.textContent = "Ansvarig:";
+        // respLabel.textContent = "Ansvarig:";
 
-        form.append(respLabel);
+        // form.append(respLabel);
 
-        let responsible = document.createElement("input");
+        // let responsible = document.createElement("input");
 
-        responsible.setAttribute("type", "text");
-        responsible.setAttribute("name", "responsible");
+        // responsible.setAttribute("type", "text");
+        // responsible.setAttribute("name", "responsible");
 
-        responsible.addEventListener("input", (event) => {
-            this.saveInput(event);
-        });
+        // responsible.addEventListener("input", (event) => {
+        //     this.saveInput(event);
+        // });
 
-        form.append(responsible);
+        // form.append(responsible);
 
         let submit = document.createElement("input");
 

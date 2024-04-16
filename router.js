@@ -16,6 +16,10 @@ export default class Router extends HTMLElement {
             "new-project": {
                 view: `<new-project></new-project>`,
                 name: `Nytt projekt`,
+            },
+            "login": {
+                view: `<login-form></login-form>`,
+                name: `Logga in`,
             }
         };
     }
