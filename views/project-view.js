@@ -23,13 +23,16 @@ export default class ProjectView extends HTMLElement {
 
     async connectedCallback() {
         let projects = await projectModel.fetchProjects();
-        let currentProject = projects[this.projectid];
+        let currentProject = projects.filter((p) => p.id === parseInt(this.projectid))[0];
 
         this.innerHTML = `
             <a href="#">Tillbaka</a>
             <h1>${currentProject.name}</h1>
             <p>Ansvarig: ${currentProject.responsible}</p>
-            <p>${currentProject.description}</p>`;
+            <p>${currentProject.description}</p>
+            <map-component projectid="${this.projectid}"></map-component>
+            <camera-component projectid="${this.projectid}"></camera-component>
+            `;
     }
 }
 

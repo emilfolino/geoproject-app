@@ -52,7 +52,7 @@ export default class ProjectList extends HTMLElement {
             let button = document.createElement("a");
 
             button.textContent = "Gå till projektet";
-            button.href = `#project/${i}`;
+            button.href = `#project/${p.id}`;
             button.classList.add("button");
 
             element.appendChild(name);
