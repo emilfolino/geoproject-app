@@ -5,6 +5,7 @@ export default class ProjectView extends HTMLElement {
         super();
 
         this.projectid = "";
+        this.cameraElement = null;
     }
 
     static get observedAttributes() {
@@ -26,15 +27,34 @@ export default class ProjectView extends HTMLElement {
         let currentProject = projects.filter((p) => p.id === parseInt(this.projectid))[0];
 
         this.innerHTML = `
-            <a href="#">Tillbaka</a>
+            <div class="extra-padding"><a href="#">Tillbaka</a>
             <h1>${currentProject.name}</h1>
             <p>Ansvarig: ${currentProject.responsible}</p>
             <p>${currentProject.description}</p>
+            <button class="button" id="show-camera">Ta en bild</button></div>
             <map-component projectid="${this.projectid}"></map-component>
-            <camera-component projectid="${this.projectid}"></camera-component>
             `;
+
+        this.init();
+    }
+
+    init() {
+        const showCamera = document.getElementById("show-camera");
+
+        showCamera.addEventListener("click", () => {
+            this.renderCameraComponent();
+        });
+    }
+
+    renderCameraComponent() {
+        this.cameraElement = document.createElement("camera-component");
+        this.cameraElement.setAttribute("projectid", this.projectid);
+
+        this.append(this.cameraElement);
     }
 }
+
+
 
 
 

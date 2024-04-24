@@ -6,7 +6,7 @@ export default class MapView extends HTMLElement {
 
         this.map = null;
         this.projectid = "";
-        this.markers = [];
+        this.markers = L.markerClusterGroup();
     }
 
     static get observedAttributes() {
@@ -24,6 +24,10 @@ export default class MapView extends HTMLElement {
 
     connectedCallback() {
         this.innerHTML = `<div id="map" class="map"></div>`;
+
+        document.addEventListener('photoAdded', (event) => {
+            this.addMarker(event.detail.photo);
+        });
 
         this.renderMap();
     }
@@ -47,8 +51,16 @@ export default class MapView extends HTMLElement {
         for (let i = 0; i < result.data.length; i++) {
             let image = result.data[i];
 
-            L.marker([image.latitude, image.longitude]).addTo(this.map)
-                .bindPopup(`<img src="${image.url}" style="width: 200px;" />`);
+            this.addMarker(image);
         }
+
+        this.map.addLayer(this.markers);
+    }
+
+    addMarker(image) {
+        let marker = L.marker([image.latitude, image.longitude]).addTo(this.map)
+            .bindPopup(`<img src="${image.url}" style="width: 200px;" />`);
+
+        this.markers.addLayer(marker);
     }
 }

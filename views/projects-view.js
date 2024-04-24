@@ -15,7 +15,7 @@ export default class ProjectsView extends HTMLElement {
             button = `<a href="#login" class="button">Logga in</a>`;
         }
 
-        this.innerHTML = `<h1>GeoProject</h1>
+        this.innerHTML = `<div class="extra-padding"><h1>GeoProject</h1>
 
         <p>${flashMessage}</p>
 
@@ -23,7 +23,7 @@ export default class ProjectsView extends HTMLElement {
 
         <p>Här listas projekten:</p>
 
-        <project-list></project-list>`;
+        <project-list></project-list></div>`;
     }
 }
 

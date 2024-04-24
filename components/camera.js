@@ -25,12 +25,10 @@ export default class CameraComponent extends HTMLElement {
 
     connectedCallback() {
         this.innerHTML = `
-        <div class="camera">
+        <div class="camera" id="camera">
             <video id="video">Video stream not available.</video>
-            <button id="startbutton">Take photo</button>
-            <button id="sendbutton">Send photo</button>
+            <button class="startbutton" id="startbutton">&nbsp;</button>
         </div>
-        <canvas id="canvas"></canvas>
         `;
 
         this.startup();
@@ -38,13 +36,12 @@ export default class CameraComponent extends HTMLElement {
 
     startup() {
         let streaming = false;
-        const width = 640; // We will scale the photo width to this
+        const width = window.screen.width; // We will scale the photo width to this
         let height = 0; // This will be computed based on the input stream
 
         let video = document.getElementById("video");
-        let canvas = document.getElementById("canvas");
+        let camera = document.getElementById("camera");
         let startbutton = document.getElementById("startbutton");
-        let sendbutton = document.getElementById("sendbutton");
 
         navigator.mediaDevices
             .getUserMedia({ video: true, audio: false })
@@ -71,8 +68,6 @@ export default class CameraComponent extends HTMLElement {
 
                     video.setAttribute("width", width);
                     video.setAttribute("height", height);
-                    canvas.setAttribute("width", width);
-                    canvas.setAttribute("height", height);
                     streaming = true;
                 }
             },
@@ -83,32 +78,27 @@ export default class CameraComponent extends HTMLElement {
             "click",
             (ev) => {
                 ev.preventDefault();
-                this.takepicture(canvas, video, width, height);
+                this.takepicture(video, width, height, camera);
             },
             false
         );
-
-        sendbutton.addEventListener(
-            "click",
-            (ev) => {
-                ev.preventDefault();
-                this.sendpicture();
-            },
-            false
-        );
-
-        this.clearphoto(canvas);
     }
 
-    takepicture(canvas, video, width, height) {
+    takepicture(video, width, height, camera) {
+        let canvas = document.createElement("canvas");
         const context = canvas.getContext("2d");
 
         if (width && height) {
+            video.remove();
+            camera.prepend(canvas);
+
             canvas.width = width;
             canvas.height = height;
             context.drawImage(video, 0, 0, width, height);
 
             this.photoData = canvas.toDataURL("image/png");
+
+            this.sendpicture();
         } else {
             this.clearphoto(canvas);
         }
@@ -131,8 +121,6 @@ export default class CameraComponent extends HTMLElement {
         const fileInfo = await client.uploadFile(blob);
         const cdnUrl = fileInfo.cdnUrl;
 
-        console.log(cdnUrl);
-
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(async (position) => {
 
@@ -152,6 +140,13 @@ export default class CameraComponent extends HTMLElement {
                 });
 
                 const result = await response.json();
+
+                document.dispatchEvent(new CustomEvent(
+                    'photoAdded',
+                    { detail: { photo: imageData } }
+                ));
+
+                this.remove();
             });
         }
     }
