@@ -75,7 +75,13 @@ export default class ChatComponent extends HTMLElement {
         socket.on('chat message', (msg) => {
             const item = document.createElement('p');
 
-            item.textContent = `${msg.name}: ${msg.message}`;
+            let message = msg.message;
+
+            if (message.match(/(https?:\/\/.*\.(?:png|jpg|gif))/g)) {
+                message = `<img src="${message}" />`;
+            }
+
+            item.innerHTML = `${msg.name}: ${message}`;
 
             messages.prepend(item);
         });

@@ -117,3 +117,22 @@ chat-component .icon {
     border: 1px solid #aaa;
     z-index: 1000;
 }
+
+.gif-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    border: 1px solid #ccc;
+    background-color: #eee;
+    padding: 1rem;
+}
+
+.gif-container img {
+    width: 30%;
+}
+
+img {
+    max-width: 100%;
+}
