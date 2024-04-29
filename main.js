@@ -8,6 +8,8 @@ import NewProject from "./components/new-project.js";
 import LoginForm from "./components/login-form.js";
 import CameraComponent from "./components/camera.js";
 import MapComponent from "./components/map.js";
+import ChatComponent from "./components/chat-component.js";
+import GifComponent from "./components/gif-component.js";
 
 customElements.define("router-outlet", Router);
 
@@ -18,5 +20,8 @@ customElements.define("project-list", ProjectList);
 customElements.define("new-project", NewProject);
 customElements.define("login-form", LoginForm);
 
-customElements.define("camera-component", CameraComponent);customElements.define("map-component", MapComponent);
+customElements.define("camera-component", CameraComponent);
+customElements.define("map-component", MapComponent);
 
+customElements.define('chat-component', ChatComponent);
+customElements.define('gif-component', GifComponent);

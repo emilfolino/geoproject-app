@@ -88,3 +88,32 @@ camera-component {
     background-color: #fff;
     margin-top: 2rem;
 }
+
+.inner-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+chat-component {
+    color: #333;
+    position:absolute;
+    right: 1rem;
+    top: 1rem;
+}
+
+chat-component .icon {
+    font-size: 2rem;
+}
+
+.chat-container {
+    background-color: #fff;
+    padding: 1rem;
+    position: absolute;
+    top: 10vh;
+    right: 5vw;
+    width: 90vw;
+    border: 1px solid #aaa;
+    z-index: 1000;
+}
